@@ -16,7 +16,7 @@ git clone https://github.com/Crevalto/Brand-NodeServer.git
 
 ### Install packages
 
-Initiate npm install of the required packages as prescribed in the `package.json` file by executing the following command in your command prompt:
+Navigate into the cloned repository and initiate npm install of the required packages as prescribed in the `package.json` file by executing the following command in your command prompt:
 
 ```
 npm install
