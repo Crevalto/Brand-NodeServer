@@ -7,32 +7,28 @@ const auth = require("../../middleware/auth");
 // creates new user in database
 exports.signUpUser = async (req, res, next) => {
   const reqBody = req.body;
-
   try {
-    console.log(reqBody);
     const userData = {
-      bandName: "covid",
-      accountPassword: "covid1920",
-      brandAddress: "chuna",
+      bandName: reqBody["bandName"],
+      accountPassword: reqBody["accountPassword"],
+      brandAddress: reqBody["brandAddress"],
       identificationDetail: {
-        regNo: "12345",
-        cinNo: "abc1234",
+        regNo: reqBody["regNo"],
+        cinNo: reqBody["cinNo"],
       },
-      emailAddress: "sam@sams.com",
-      phoneNo: "9711223343",
+      emailAddress: reqBody["emailAddress"],
+      phoneNo: reqBody["phoneNo"],
       brandAssets: {
-        brandLogoSrc: "logo",
-        brandColor: "yellow",
-        brandSoundTrack: "piano",
+        brandLogoSrc: reqBody["brandLogoSrc"],
+        brandColor: reqBody["brandColor"],
+        brandSoundTrack: reqBody["brandSoundTrack"],
       },
     };
-
     const user = new User(userData);
-    await user.save();
-
     const token = await user.generateAuthToken();
 
-    // res.status(201).send({ user, token });
+    const bandName = await user.bandName;
+    res.status(201).send({ bandName, token });
   } catch (error) {
     res.status(400).send(error);
   }
