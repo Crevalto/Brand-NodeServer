@@ -1,16 +1,29 @@
 // importing required packages
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 // creating express middleware
 const app = express();
+// adding bodyParser to encodeURL and helping parse JSON body
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// importing routes
+const brandRoutes = require("./routes/brandRoutes");
 
 // defining routes
-app.use("/", (req, res, next) => {
-  res.send(
-    "We appreciate your interest. Please wait, development in progress!"
-  );
-});
+app.use("/brand", brandRoutes);
 
-// starting listener on ports
-app.listen(4000);
+// connecting to database
+mongoose
+  .connect(
+    "mongodb+srv://rohitraj:shanthiraj1310@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority"
+  )
+  .then((result) => {
+    // starting listener on ports
+    app.listen(4000);
+  })
+  .catch((err) => {
+    console.log("Error Occurred during database connection: " + err);
+  });
