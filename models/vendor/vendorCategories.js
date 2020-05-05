@@ -22,4 +22,4 @@ const vendorCategory = new Schema(
 );
 
 // creating model and exporting it
-module.exports = mongoose.model("vendorcategory", vendorCategory);
+module.exports = mongoose.model("vendorcategorie", vendorCategory);

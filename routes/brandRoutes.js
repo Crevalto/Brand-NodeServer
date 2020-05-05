@@ -6,6 +6,7 @@ const router = express.Router();
 // getting reference to the controllers for Brand side APIs
 const shotStackAddVideoToQueueController = require("../controllers/shotStackAPIs/addVideoToQueueController");
 const shotStackGetRenderedVideoController = require("../controllers/shotStackAPIs/getRenderedVideo");
+const vendroProductGetCategories = require("../controllers/vendorProductAPIs/getProductCategories");
 
 // add video to render queue
 router.post(
@@ -15,9 +16,12 @@ router.post(
 
 // get video render progress
 router.get(
-  "/promotionalVideo/getprogress",
+  "/promotionalvideo/getprogress",
   shotStackGetRenderedVideoController.getRenderProgress
 );
+
+// gets all the categories of products
+router.get("/getcategories", vendroProductGetCategories.getCategories);
 
 // exporting router
 module.exports = router;
