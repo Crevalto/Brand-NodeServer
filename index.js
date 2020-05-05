@@ -18,7 +18,7 @@ app.use("/brand", brandRoutes);
 // connecting to database
 mongoose
   .connect(
-    "mongodb://localhost:27017/crevaltodb?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false"
+    "mongodb+srv://rohitraj:shanthiraj1310@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority"
   )
   .then((result) => {
     // starting listener on ports
