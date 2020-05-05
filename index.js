@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+require("dotenv").config({ path: __dirname + "/.env" });
 
 // creating express middleware
 const app = express();
@@ -18,7 +19,7 @@ app.use("/brand", brandRoutes);
 // connecting to database
 mongoose
   .connect(
-    "mongodb+srv://rohitraj:shanthiraj1310@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority",
+    "mongodb://localhost:27017/crevaltodb?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false",
     {
       useNewUrlParser: true,
       useCreateIndex: true,
@@ -27,7 +28,7 @@ mongoose
   )
   .then((result) => {
     // starting listener on ports
-    app.listen(9000);
+    app.listen(4000);
     console.log("started server");
   })
   .catch((err) => {

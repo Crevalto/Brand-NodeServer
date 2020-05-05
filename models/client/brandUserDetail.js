@@ -47,14 +47,10 @@ const userDetailSchema = new Schema({
     brandColor: String,
     brandSoundTrack: String,
   },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  token: {
+    type: String,
+    required: true,
+  },
 });
 
 userDetailSchema.pre("save", async function (next) {
@@ -69,17 +65,18 @@ userDetailSchema.pre("save", async function (next) {
 userDetailSchema.methods.generateAuthToken = async function () {
   // Generate an auth token for the user
   const user = this;
-
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_KEY);
-  console.log("ASDFASDFASDF");
-  // user.tokens = user.tokens.concat({ token });
-  // await user.save();
-  // return token;
+  const token = jwt.sign({ _id: user._id }, process.env["JWT_KEY"]);
+  user.token = token;
+  await user.save();
+  return token;
 };
 
 userDetailSchema.statics.findByCredentials = async (email, accountPassword) => {
+  const userModel = mongoose.model("branduserdetail", userDetailSchema);
+
   // Search for a user by email and password.
-  const user = await User.findOne({ email });
+  const user = await userModel.findOne({ emailAddress: email });
+
   if (!user) {
     throw new Error({ error: "Invalid login credentials" });
   }
