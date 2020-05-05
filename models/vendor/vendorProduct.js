@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+// getting schema instance
+const Schema = mongoose.Schema;
 
-const productSchema = new mongoose.Schema(
+const productSchema = new Schema(
   {
     productName: { type: String, required: true },
     stockAddress: { type: String, required: true },
@@ -8,7 +10,7 @@ const productSchema = new mongoose.Schema(
     description: { type: String },
     quantity: { type: Number, required: true },
     size: { type: String, required: true },
-    category: { type: String, required: true },
+    category: { type: Schema.Types.ObjectId, required: true },
     productImages: { type: Buffer },
     proofOfSalePrice: { type: Buffer },
     taxDocument: { type: Buffer },
