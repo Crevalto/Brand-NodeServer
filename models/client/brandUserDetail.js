@@ -37,4 +37,4 @@ const userDetailSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("UserDetails", userDetailSchema);
+module.exports = mongoose.model("branduserdetail", userDetailSchema);

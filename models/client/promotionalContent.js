@@ -9,15 +9,17 @@ const promotionalContentSchema = new Schema({
   brandAssociated: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "UserDetail",
+  },
+  merchantAssociated: {
+    type: Schema.Types.ObjectId,
+    required: true,
   },
   contentName: {
     type: String,
     required: true,
   },
-  contentPath: {
+  contentURL: {
     type: String,
-    required: true,
   },
   brandApprovalStatus: {
     type: Boolean,
@@ -29,4 +31,5 @@ const promotionalContentSchema = new Schema({
   },
 });
 
+// creating model and exporting it
 module.exports = mongoose.model("promotionalContent", promotionalContentSchema);
