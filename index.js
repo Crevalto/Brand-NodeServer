@@ -18,11 +18,17 @@ app.use("/brand", brandRoutes);
 // connecting to database
 mongoose
   .connect(
-    "mongodb+srv://rohitraj:shanthiraj1310@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority"
+    "mongodb+srv://rohitraj:shanthiraj1310@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    }
   )
   .then((result) => {
     // starting listener on ports
-    app.listen(4000);
+    app.listen(9000);
+    console.log("started server");
   })
   .catch((err) => {
     console.log("Error Occurred during database connection: " + err);

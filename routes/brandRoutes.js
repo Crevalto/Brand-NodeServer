@@ -1,5 +1,7 @@
-// creating instance of express
 const express = require("express");
+// const User = require("../models/User");
+const auth = require("../middleware/auth");
+
 // creating a router instance to manage routes
 const router = express.Router();
 
@@ -8,6 +10,17 @@ const shotStackAddVideoToQueueController = require("../controllers/shotStackAPIs
 const shotStackGetRenderedVideoController = require("../controllers/shotStackAPIs/getRenderedVideo");
 const vendorProductGetCategories = require("../controllers/vendorProductAPIs/getProductCategories");
 const vendorProductGetProducts = require("../controllers/vendorProductAPIs/getProducts");
+
+// importing controllers
+const userSignUpController = require("../controllers/auth/signUp");
+const userSignInController = require("../controllers/auth/signIn");
+const userProfileViewController = require("../controllers/auth/profileView");
+
+router.post("/users/register", userSignUpController.signUpUser);
+
+router.post("/users/login", userSignInController.signInUser);
+
+router.get("/users/profile", auth, userProfileViewController.profileView);
 
 // add video to render queue
 router.post(
