@@ -20,7 +20,7 @@ app.use("/brand", brandRoutes);
 // connecting to database
 mongoose
   .connect(
-    "mongodb+srv://rohitraj:<password>@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority",
+    "mongodb+srv://rohitraj:shanthiraj1310@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
       useCreateIndex: true,
