@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 require("dotenv").config({ path: __dirname + "/.env" });
 
 // creating express middleware
@@ -12,14 +13,14 @@ app.use(bodyParser.json());
 
 // importing routes
 const brandRoutes = require("./routes/brandRoutes");
-
+app.use(cors());
 // defining routes
 app.use("/brand", brandRoutes);
 
 // connecting to database
 mongoose
   .connect(
-    "mongodb://localhost:27017/crevaltodb?readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=false",
+    "mongodb+srv://rohitraj:<password>@cluster0-h68h8.mongodb.net/crevaltodb?retryWrites=true&w=majority",
     {
       useNewUrlParser: true,
       useCreateIndex: true,
@@ -28,7 +29,7 @@ mongoose
   )
   .then((result) => {
     // starting listener on ports
-    app.listen(4000);
+    app.listen(process.env.PORT || 4000);
     console.log("started server");
   })
   .catch((err) => {

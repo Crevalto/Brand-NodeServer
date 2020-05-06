@@ -39,7 +39,7 @@ const userDetailSchema = new Schema({
     },
   },
   phoneNo: {
-    type: Number,
+    type: String,
     required: true,
   },
   brandAssets: {
