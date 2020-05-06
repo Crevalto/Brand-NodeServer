@@ -8,6 +8,8 @@ const auth = require("../../middleware/auth");
 exports.signUpUser = async (req, res, next) => {
   const reqBody = req.body;
   try {
+    console.log(reqBody);
+
     const userData = {
       bandName: reqBody["bandName"],
       accountPassword: reqBody["accountPassword"],
@@ -25,11 +27,16 @@ exports.signUpUser = async (req, res, next) => {
       },
     };
     const user = new User(userData);
-    const token = await user.generateAuthToken();
+    const usertoken = await user.generateAuthToken();
 
     const bandName = await user.bandName;
-    res.status(201).send({ bandName, token });
+    res
+      .status(201)
+      .send({ status: true, brandName: bandName, token: usertoken });
+    // res.send({ status: true });
   } catch (error) {
+    console.log(error);
+
     res.status(400).send(error);
   }
 };

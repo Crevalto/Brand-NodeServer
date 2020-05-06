@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
 require("dotenv").config({ path: __dirname + "/.env" });
 
 // creating express middleware
@@ -12,7 +13,7 @@ app.use(bodyParser.json());
 
 // importing routes
 const brandRoutes = require("./routes/brandRoutes");
-
+app.use(cors());
 // defining routes
 app.use("/brand", brandRoutes);
 

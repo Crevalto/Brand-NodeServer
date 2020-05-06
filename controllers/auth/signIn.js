@@ -20,6 +20,8 @@ exports.signInUser = async (req, res) => {
 
     res.send({ status: true, name, token });
   } catch (error) {
+    console.log(error);
+
     res.status(400).send({ status: false, error });
   }
 };
