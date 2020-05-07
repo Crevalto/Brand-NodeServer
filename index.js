@@ -2,6 +2,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config({ path: __dirname + "/.env" });
 
 // creating express middleware
 const app = express();
@@ -11,7 +13,7 @@ app.use(bodyParser.json());
 
 // importing routes
 const brandRoutes = require("./routes/brandRoutes");
-
+app.use(cors());
 // defining routes
 app.use("/brand", brandRoutes);
 
@@ -27,7 +29,7 @@ mongoose
   )
   .then((result) => {
     // starting listener on ports
-    app.listen(9000);
+    app.listen(process.env.PORT || 4000);
     console.log("started server");
   })
   .catch((err) => {

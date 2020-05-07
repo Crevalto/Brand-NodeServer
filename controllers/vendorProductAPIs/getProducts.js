@@ -11,10 +11,10 @@ exports.getProducts = (req, res, next) => {
     err,
     products
   ) {
-    var prodMap = {};
+    var prodMap = [];
 
     products.forEach(function (product) {
-      prodMap[product._id] = product;
+      prodMap.push(product);
     });
 
     res.send(prodMap);

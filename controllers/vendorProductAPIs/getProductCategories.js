@@ -5,10 +5,10 @@ const VendorCategories = require("../../models/vendor/vendorCategories");
 exports.getCategories = (req, res, next) => {
   // fetching all categories from the database
   VendorCategories.find({}, function (err, categories) {
-    var catMap = {};
+    var catMap = [];
 
     categories.forEach(function (category) {
-      catMap[category._id] = category;
+      catMap.push(category);
     });
 
     res.send(catMap);
