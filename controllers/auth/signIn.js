@@ -18,13 +18,15 @@ exports.signInUser = async (req, res) => {
     // checking if the user is a verified user
     if (user.verifiedUser) {
       // generating auth token for the user
-      const tokenGenerated = await user.generateAuthToken();
+      await user.generateAuthToken();
       // updating value in database
       const newUser = await User.findByIdAndUpdate(
         user._id,
-        { token: tokenGenerated },
+        { token: user.token },
         { new: true },
         (err, user) => {
+          console.log(user);
+
           if (err)
             res.status(500).send({
               status: false,
@@ -36,9 +38,9 @@ exports.signInUser = async (req, res) => {
       // sending response for login
       res.send({
         status: true,
-        name: user.brandName,
-        token: user.token,
-        verifiedUser: user.verifiedUser,
+        name: newUser.brandName,
+        token: newUser.token,
+        verifiedUser: newUser.verifiedUser,
       });
     } else {
       // sending response for login
