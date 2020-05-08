@@ -10,7 +10,7 @@ const Schema = mongoose.Schema;
 
 // creating userDetail Schema
 const userDetailSchema = new Schema({
-  bandName: {
+  brandName: {
     type: String,
     required: true,
     unique: true,
@@ -48,9 +48,13 @@ const userDetailSchema = new Schema({
     brandColor: String,
     brandSoundTrack: String,
   },
+  verifiedUser: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   token: {
     type: String,
-    required: true,
   },
 });
 
@@ -62,14 +66,11 @@ userDetailSchema.pre("save", async function (next) {
   }
   next();
 });
-
+// Generate an auth token for the user
 userDetailSchema.methods.generateAuthToken = async function () {
-  // Generate an auth token for the user
   const user = this;
   const token = jwt.sign({ _id: user._id }, process.env["JWT_KEY"]);
   user.token = token;
-  await user.save();
-  return token;
 };
 
 userDetailSchema.statics.findByCredentials = async (

@@ -29,6 +29,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.10",
+    "nodemailer": "^6.4.6",
     "shotstack-sdk": "0.0.17",
     "validator": "^13.0.0"
   }

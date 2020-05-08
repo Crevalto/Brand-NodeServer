@@ -3,6 +3,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cors = require("cors");
+
+// setting environment variables
 require("dotenv").config({ path: __dirname + "/.env" });
 
 // creating express middleware
@@ -14,8 +16,8 @@ app.use(bodyParser.json());
 // importing routes
 const brandRoutes = require("./routes/brandRoutes");
 app.use(cors());
-// defining routesyy
 
+// defining routes
 app.use("/brand", brandRoutes);
 
 // connecting to database
@@ -31,7 +33,7 @@ mongoose
   .then((result) => {
     // starting listener on ports
     app.listen(process.env.PORT || 4000);
-    console.log("started server");
+    console.log("Server started");
   })
   .catch((err) => {
     console.log("Error Occurred during database connection: " + err);
