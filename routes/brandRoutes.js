@@ -13,10 +13,12 @@ const vendorProductGetProducts = require("../controllers/vendorProductAPIs/getPr
 const userSignUpController = require("../controllers/auth/signUp");
 const userSignInController = require("../controllers/auth/signIn");
 const userProfileViewController = require("../controllers/auth/profileView");
+const verifyUserController = require("../controllers/auth/userVerification");
 
 // user authentication routes
 router.post("/users/register", userSignUpController.signUpUser);
 router.post("/users/login", userSignInController.signInUser);
+router.post("/users/verify", verifyUserController.setUserAsVerified);
 // profile view route
 router.get("/users/profile/:brandName", userProfileViewController.profileView);
 // add video to render queue
