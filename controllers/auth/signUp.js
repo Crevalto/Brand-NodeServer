@@ -1,3 +1,6 @@
+// importing required packages
+const nodemailer = require("nodemailer");
+
 // requiring required models
 const User = require("../../models/client/brandUserDetail");
 
@@ -8,6 +11,35 @@ const genOTP = () => {
     if (x < 9999 && x > 1000) return x;
     else continue;
   }
+};
+
+// sends email to the user with the OTP
+const sendEmailToUser = async (OTPCode, emailAddress) => {
+  // setting up mail transporter
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "rij7u7d2@gmail.com",
+      pass: "shanthiraj13",
+    },
+  });
+  // setting up mail components
+  var mailOptions = {
+    from: "rij7u7d2@gmail.com",
+    to: emailAddress,
+    subject: "OTP for Sign UP!",
+    text:
+      "Your OTP is " + OTPCode + ". Please keep it secret for god's sakes!!",
+  };
+  // sending mail
+  await transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+      return false;
+    } else {
+      return true;
+    }
+  });
 };
 
 // creates new user in database
@@ -42,13 +74,20 @@ exports.signUpUser = async (req, res, next) => {
     await user.save();
     // generating OTP code
     const OTPCode = genOTP();
-
+    // initiating mail sending function
+    const mailSendResult = await sendEmailToUser(
+      OTPCode,
+      userData.emailAddress
+    );
     // sending response
-    res.status(201).send({ status: true, otp: OTPCode });
+    res
+      .status(201)
+      .send({ status: true, otp: OTPCode, mailSent: mailSendResult });
   } catch (error) {
+    console.log(error);
+
     // creating instance of error message
     let errorMsg = "";
-
     // catching mongoose errors
     if ((error.name = "MongoError")) {
       // go through all validation type errors
