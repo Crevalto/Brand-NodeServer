@@ -20,7 +20,7 @@ router.post("/users/register", userSignUpController.signUpUser);
 
 router.post("/users/login", userSignInController.signInUser);
 
-router.get("/users/profile", auth, userProfileViewController.profileView);
+router.get("/users/profile/:brandName", userProfileViewController.profileView);
 
 // add video to render queue
 router.post(
