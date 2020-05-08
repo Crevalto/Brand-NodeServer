@@ -1,6 +1,12 @@
 // importing required packages
 const nodemailer = require("nodemailer");
-
+const { google } = require("googleapis");
+const OAuth2 = google.auth.OAuth2;
+const oauth2Client = new OAuth2(
+  "829861943607-m2sn0viagga91u3d49417eujmdd8l1jp.apps.googleusercontent.com",
+  "8ki2RSn8L5yVS7yh1B60bydj",
+  "https://developers.google.com/oauthplayground"
+);
 // requiring required models
 const User = require("../../models/client/brandUserDetail");
 
@@ -15,12 +21,23 @@ const genOTP = () => {
 
 // sends email to the user with the OTP
 const sendEmailToUser = async (OTPCode, emailAddress) => {
+  oauth2Client.setCredentials({
+    refresh_token: "Your Refresh Token Here",
+  });
+  const accessToken = oauth2Client.getAccessToken();
   // setting up mail transporter
   var transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
+      type: "OAuth2",
       user: "rij7u7d2@gmail.com",
       pass: "shanthiraj13",
+      clientId:
+        "829861943607-m2sn0viagga91u3d49417eujmdd8l1jp.apps.googleusercontent.com",
+      clientSecret: "8ki2RSn8L5yVS7yh1B60bydj",
+      refreshToken:
+        "1//04LGGqglIAktYCgYIARAAGAQSNwF-L9IroJ8bbVk5TLyvDfHdcBHMbKFGp_BHyuoeaJ4G_pGZ4ghT4Ojg_i_2Ed5c2q3zA3RV-rA",
+      accessToken: accessToken,
     },
   });
   // setting up mail components
