@@ -1,7 +1,7 @@
 const User = require("../../models/client/brandUserDetail");
 
 // const User = require("../models/User");
-const auth = require("../../middleware/auth");
+//const auth = require("../../middleware/auth");
 
 exports.signInUser = async (req, res) => {
   //Login a registered user
@@ -22,6 +22,8 @@ exports.signInUser = async (req, res) => {
   } catch (error) {
     console.log(error);
 
-    res.status(400).send({ status: false, error });
+    res
+      .status(400)
+      .send({ status: false, error: "Username or password is incorrect" });
   }
 };

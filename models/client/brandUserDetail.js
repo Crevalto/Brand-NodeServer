@@ -13,6 +13,7 @@ const userDetailSchema = new Schema({
   bandName: {
     type: String,
     required: true,
+    unique: true,
   },
   accountPassword: {
     type: String,
@@ -71,11 +72,14 @@ userDetailSchema.methods.generateAuthToken = async function () {
   return token;
 };
 
-userDetailSchema.statics.findByCredentials = async (email, accountPassword) => {
+userDetailSchema.statics.findByCredentials = async (
+  emailAddress,
+  accountPassword
+) => {
   const userModel = mongoose.model("branduserdetail", userDetailSchema);
 
   // Search for a user by email and password.
-  const user = await userModel.findOne({ emailAddress: email });
+  const user = await userModel.findOne({ emailAddress: emailAddress });
 
   if (!user) {
     throw new Error({ error: "Invalid login credentials" });
@@ -87,6 +91,17 @@ userDetailSchema.statics.findByCredentials = async (email, accountPassword) => {
   if (!isPasswordMatch) {
     throw new Error({ error: "Invalid login credentials" });
   }
+  return user;
+};
+
+userDetailSchema.statics.findByBrandName = async (bandName) => {
+  const userModel = mongoose.model("branduserdetail", userDetailSchema);
+
+  const user = await userModel.findOne(bandName);
+  if (!user) {
+    throw new Error({ error: "User doesn't exist" });
+  }
+
   return user;
 };
 
