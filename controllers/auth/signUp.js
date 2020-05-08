@@ -3,7 +3,6 @@ const User = require("../../models/client/brandUserDetail");
 const express = require("express");
 // const User = require("../models/User");
 const auth = require("../../middleware/auth");
-
 // creates new user in database
 exports.signUpUser = async (req, res, next) => {
   const reqBody = req.body;
@@ -15,15 +14,15 @@ exports.signUpUser = async (req, res, next) => {
       accountPassword: reqBody["accountPassword"],
       brandAddress: reqBody["brandAddress"],
       identificationDetail: {
-        regNo: reqBody["regNo"],
-        cinNo: reqBody["cinNo"],
+        regNo: reqBody["identificationDetail"]["regNo"],
+        cinNo: reqBody["identificationDetail"]["cinNo"],
       },
       emailAddress: reqBody["emailAddress"],
       phoneNo: reqBody["phoneNo"],
       brandAssets: {
-        brandLogoSrc: reqBody["brandLogoSrc"],
-        brandColor: reqBody["brandColor"],
-        brandSoundTrack: reqBody["brandSoundTrack"],
+        brandLogoSrc: reqBody["brandAssets"]["brandLogoSrc"],
+        brandColor: reqBody["brandAssets"]["brandColor"],
+        brandSoundTrack: reqBody["brandAssets"]["brandSoundTrack"],
       },
     };
     const user = new User(userData);
@@ -37,6 +36,6 @@ exports.signUpUser = async (req, res, next) => {
   } catch (error) {
     console.log(error);
 
-    res.status(400).send(error);
+    res.status(400).send({ error: "Fill out the required fields" });
   }
 };

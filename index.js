@@ -14,7 +14,8 @@ app.use(bodyParser.json());
 // importing routes
 const brandRoutes = require("./routes/brandRoutes");
 app.use(cors());
-// defining routes
+// defining routesyy
+
 app.use("/brand", brandRoutes);
 
 // connecting to database
