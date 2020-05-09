@@ -11,6 +11,38 @@ const oauth2Client = new OAuth2(
 const User = require("../../models/client/brandUserDetail");
 const OTPCollection = require("../../models/client/otpCollection");
 
+// constructing mail html template
+const constructHTMLTemp = (otpNumber, brandName) => {
+  return (
+    `
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Account verification Email</title>
+  </head>
+  <body style="color: #6c63FE; font-family: \'Verdana\'">
+    <div align="center" style="padding-left: 10%;padding-right: 10%;">
+      <h2 style="text-align: center;">Hey there, ` +
+    brandName +
+    `!</h2>
+      <p>
+        Use this One Time Password to verify your account and start you magical journey!
+      </p> 
+      <h1 style="text-align: center; font-size: 45px;">` +
+    otpNumber +
+    `</h1>
+      <p style="text-align: center;">
+        Team Crevalto
+      </p>
+      <br>
+    </div>
+  </body>
+</html>`
+  );
+};
+
 // generates random number for OTP
 const genOTP = () => {
   while (true) {
@@ -21,7 +53,7 @@ const genOTP = () => {
 };
 
 // sends email to the user with the OTP
-const sendEmailToUser = async (otpCode, emailAddress) => {
+const sendEmailToUser = async (otpCode, emailAddress, brandName) => {
   oauth2Client.setCredentials({
     refresh_token: "Your Refresh Token Here",
   });
@@ -46,8 +78,7 @@ const sendEmailToUser = async (otpCode, emailAddress) => {
     from: "rij7u7d2@gmail.com",
     to: emailAddress,
     subject: "OTP for Sign UP!",
-    text:
-      "Your OTP is " + otpCode + ". Please keep it secret for god's sakes!!",
+    html: constructHTMLTemp(otpCode, brandName),
   };
   // returning promise
   return new Promise((resolve, reject) => {
@@ -94,7 +125,8 @@ exports.signUpUser = async (req, res, next) => {
     // initiating mail sending function
     const mailSendResult = await sendEmailToUser(
       otpCode,
-      userData.emailAddress
+      userData.emailAddress,
+      userData.brandName
     );
 
     // inserting OTP details into the OTP collection
