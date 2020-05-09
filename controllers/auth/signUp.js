@@ -113,6 +113,11 @@ exports.signUpUser = async (req, res, next) => {
           case "required":
             errorMsg = "Please fill all required fields";
             break;
+          case "minlength":
+            errorMsg = "Password length shorter than 7 characters";
+            break;
+          default:
+            errorMsg = error.errors[errName].message;
         }
       }
       // checking for mongoose error
