@@ -6,12 +6,13 @@ const Schema = mongoose.Schema;
 
 // creating collection to store OTP details
 const otpCollectionSchema = new Schema({
-  user: {
+  userId: {
     type: Schema.Types.ObjectId,
     required: true,
+    unique: true,
   },
   otpCode: {
-    type: String,
+    type: Number,
     required: true,
   },
 });

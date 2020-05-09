@@ -96,20 +96,35 @@ exports.signUpUser = async (req, res, next) => {
       otpCode,
       userData.emailAddress
     );
-    console.log(mailSendResult);
-    // creating document object
-    const otpDocumentObj = {
-      user: user._id,
-      otpCode: otpCode,
-    };
+
     // inserting OTP details into the OTP collection
-    const otpDocument = new OTPCollection(otpDocumentObj);
+    const otpDocument = new OTPCollection({
+      userId: user._id,
+      otpCode: otpCode,
+    });
     // saving the otp document into the collection
     await otpDocument.save();
+
+    // // finding if the user has an OTP in collection
+    // const updatedOTP = await OTPCollection.findOneAndUpdate(
+    //   { user: user._id },
+    //   { otpCode: otpCode },
+    //   { new: true },
+    //   (error, doc) => {
+    //     if (error == null) return doc;
+    //     else {
+    //       console.log(error);
+    //     }
+    //   }
+    // );
+    // console.log(updatedOTP);
     // sending response
-    res
-      .status(201)
-      .send({ status: true, otp: otpCode, mailSent: mailSendResult });
+    res.status(201).send({
+      status: true,
+      otp: otpCode,
+      userId: user._id,
+      mailSent: mailSendResult,
+    });
   } catch (error) {
     console.log(error);
 

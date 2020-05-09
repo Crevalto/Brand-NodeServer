@@ -14,11 +14,13 @@ const userSignUpController = require("../controllers/auth/signUp");
 const userSignInController = require("../controllers/auth/signIn");
 const userProfileViewController = require("../controllers/auth/profileView");
 const verifyUserController = require("../controllers/auth/userVerification");
+const verifyUserSecureController = require("../controllers/auth/userVerificationSecure");
 
 // user authentication routes
 router.post("/users/register", userSignUpController.signUpUser);
 router.post("/users/login", userSignInController.signInUser);
 router.post("/users/verify", verifyUserController.setUserAsVerified);
+router.post("/users/verifysecure", verifyUserSecureController.otpVerification);
 // profile view route
 router.get("/users/profile/:brandName", userProfileViewController.profileView);
 // add video to render queue
