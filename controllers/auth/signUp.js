@@ -22,15 +22,15 @@ const constructHTMLTemp = (otpNumber, brandName) => {
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Account verification Email</title>
   </head>
-  <body style="color: #6c63FE; font-family: \'Verdana\'">
+  <body style="color: #6c2780; font-family: \'Verdana\'">
     <div align="center" style="padding-left: 10%;padding-right: 10%;">
-      <h2 style="text-align: center;">Hey there, ` +
+      <h2 style="text-align: center; color: #6c2780;">Hey there, ` +
     brandName +
     `!</h2>
-      <p>
+      <p style="color: #6c2780;">
         Use this One Time Password to verify your account and start you magical journey!
       </p> 
-      <h1 style="text-align: center; font-size: 45px;">` +
+      <h1 style="text-align: center; font-size: 45px; color: #6c2780;">OTP: ` +
     otpNumber +
     `</h1>
       <p style="text-align: center;">
