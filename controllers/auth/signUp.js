@@ -9,6 +9,7 @@ const oauth2Client = new OAuth2(
 );
 // requiring required models
 const User = require("../../models/client/brandUserDetail");
+const OTPCollection = require("../../models/client/otpCollection");
 
 // generates random number for OTP
 const genOTP = () => {
@@ -20,7 +21,7 @@ const genOTP = () => {
 };
 
 // sends email to the user with the OTP
-const sendEmailToUser = async (OTPCode, emailAddress) => {
+const sendEmailToUser = async (otpCode, emailAddress) => {
   oauth2Client.setCredentials({
     refresh_token: "Your Refresh Token Here",
   });
@@ -46,16 +47,17 @@ const sendEmailToUser = async (OTPCode, emailAddress) => {
     to: emailAddress,
     subject: "OTP for Sign UP!",
     text:
-      "Your OTP is " + OTPCode + ". Please keep it secret for god's sakes!!",
+      "Your OTP is " + otpCode + ". Please keep it secret for god's sakes!!",
   };
-  // sending mail
-  await transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-      return false;
-    } else {
-      return true;
-    }
+  // returning promise
+  return new Promise((resolve, reject) => {
+    // sending mail
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error == null) resolve(true);
+      else {
+        resolve(error);
+      }
+    });
   });
 };
 
@@ -85,21 +87,29 @@ exports.signUpUser = async (req, res, next) => {
     };
     // creating user document instance
     const user = new User(userData);
-    // // creating token for user and adding it to model
-    // await user.generateAuthToken();
     // inserting data into database
     await user.save();
     // generating OTP code
-    const OTPCode = genOTP();
+    const otpCode = genOTP();
     // initiating mail sending function
     const mailSendResult = await sendEmailToUser(
-      OTPCode,
+      otpCode,
       userData.emailAddress
     );
+    console.log(mailSendResult);
+    // creating document object
+    const otpDocumentObj = {
+      user: user._id,
+      otpCode: otpCode,
+    };
+    // inserting OTP details into the OTP collection
+    const otpDocument = new OTPCollection(otpDocumentObj);
+    // saving the otp document into the collection
+    await otpDocument.save();
     // sending response
     res
       .status(201)
-      .send({ status: true, otp: OTPCode, mailSent: mailSendResult });
+      .send({ status: true, otp: otpCode, mailSent: mailSendResult });
   } catch (error) {
     console.log(error);
 
