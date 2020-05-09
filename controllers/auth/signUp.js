@@ -9,6 +9,39 @@ const oauth2Client = new OAuth2(
 );
 // requiring required models
 const User = require("../../models/client/brandUserDetail");
+const OTPCollection = require("../../models/client/otpCollection");
+
+// constructing mail html template
+const constructHTMLTemp = (otpNumber, brandName) => {
+  return (
+    `
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Account verification Email</title>
+  </head>
+  <body style="color: #6c63FE; font-family: \'Verdana\'">
+    <div align="center" style="padding-left: 10%;padding-right: 10%;">
+      <h2 style="text-align: center;">Hey there, ` +
+    brandName +
+    `!</h2>
+      <p>
+        Use this One Time Password to verify your account and start you magical journey!
+      </p> 
+      <h1 style="text-align: center; font-size: 45px;">` +
+    otpNumber +
+    `</h1>
+      <p style="text-align: center;">
+        Team Crevalto
+      </p>
+      <br>
+    </div>
+  </body>
+</html>`
+  );
+};
 
 // generates random number for OTP
 const genOTP = () => {
@@ -20,7 +53,7 @@ const genOTP = () => {
 };
 
 // sends email to the user with the OTP
-const sendEmailToUser = async (OTPCode, emailAddress) => {
+const sendEmailToUser = async (otpCode, emailAddress, brandName) => {
   oauth2Client.setCredentials({
     refresh_token: "Your Refresh Token Here",
   });
@@ -45,17 +78,17 @@ const sendEmailToUser = async (OTPCode, emailAddress) => {
     from: "rij7u7d2@gmail.com",
     to: emailAddress,
     subject: "OTP for Sign UP!",
-    text:
-      "Your OTP is " + OTPCode + ". Please keep it secret for god's sakes!!",
+    html: constructHTMLTemp(otpCode, brandName),
   };
-  // sending mail
-  await transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-      return false;
-    } else {
-      return true;
-    }
+  // returning promise
+  return new Promise((resolve, reject) => {
+    // sending mail
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error == null) resolve(true);
+      else {
+        resolve(error);
+      }
+    });
   });
 };
 
@@ -85,21 +118,45 @@ exports.signUpUser = async (req, res, next) => {
     };
     // creating user document instance
     const user = new User(userData);
-    // // creating token for user and adding it to model
-    // await user.generateAuthToken();
     // inserting data into database
     await user.save();
     // generating OTP code
-    const OTPCode = genOTP();
+    const otpCode = genOTP();
     // initiating mail sending function
     const mailSendResult = await sendEmailToUser(
-      OTPCode,
-      userData.emailAddress
+      otpCode,
+      userData.emailAddress,
+      userData.brandName
     );
+
+    // inserting OTP details into the OTP collection
+    const otpDocument = new OTPCollection({
+      userId: user._id,
+      otpCode: otpCode,
+    });
+    // saving the otp document into the collection
+    await otpDocument.save();
+
+    // // finding if the user has an OTP in collection
+    // const updatedOTP = await OTPCollection.findOneAndUpdate(
+    //   { user: user._id },
+    //   { otpCode: otpCode },
+    //   { new: true },
+    //   (error, doc) => {
+    //     if (error == null) return doc;
+    //     else {
+    //       console.log(error);
+    //     }
+    //   }
+    // );
+    // console.log(updatedOTP);
     // sending response
-    res
-      .status(201)
-      .send({ status: true, otp: OTPCode, mailSent: mailSendResult });
+    res.status(201).send({
+      status: true,
+      otp: otpCode,
+      userId: user._id,
+      mailSent: mailSendResult,
+    });
   } catch (error) {
     console.log(error);
 
@@ -113,6 +170,11 @@ exports.signUpUser = async (req, res, next) => {
           case "required":
             errorMsg = "Please fill all required fields";
             break;
+          case "minlength":
+            errorMsg = "Password length shorter than 7 characters";
+            break;
+          default:
+            errorMsg = error.errors[errName].message;
         }
       }
       // checking for mongoose error
