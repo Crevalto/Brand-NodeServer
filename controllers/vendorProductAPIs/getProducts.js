@@ -4,24 +4,23 @@ const mongoose = require("mongoose");
 const VendorProducts = require("../../models/vendor/vendorProduct");
 
 // function that returns all products of given category
-exports.getProducts = (req, res, next) => {
+exports.getProducts = async (req, res, next) => {
   // getting the bodyparser parsed body
   let categoryId;
 
   try {
-    categoryId = mongoose.Types.ObjectId(req.body["categoryId"]);
+    categoryId = await mongoose.Types.ObjectId(req.body["categoryId"]);
+    // fetching all categories from the database
+    await VendorProducts.find({ category: categoryId }, (err, products) => {
+      var prodMap = [];
+
+      products.forEach(function (product) {
+        prodMap.push(product);
+      });
+
+      res.send({ status: true, products: prodMap });
+    });
   } catch (err) {
     res.send({ status: false, error: "Invalid category Id" });
   }
-
-  // fetching all categories from the database
-  VendorProducts.find({ category: categoryId }, function (err, products) {
-    var prodMap = [];
-
-    products.forEach(function (product) {
-      prodMap.push(product);
-    });
-
-    res.send({ status: true, products: prodMap });
-  });
 };
