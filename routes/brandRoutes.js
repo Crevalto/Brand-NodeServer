@@ -15,6 +15,7 @@ const userSignInController = require("../controllers/auth/signIn");
 const userProfileViewController = require("../controllers/auth/profileView");
 const verifyUserController = require("../controllers/auth/userVerification");
 const verifyUserSecureController = require("../controllers/auth/userVerificationSecure");
+const userEditProfileController = require("../controllers/auth/editProfile");
 
 // user authentication routes
 router.post("/users/register", userSignUpController.signUpUser);
@@ -23,6 +24,7 @@ router.post("/users/verify", verifyUserController.setUserAsVerified);
 router.post("/users/verifysecure", verifyUserSecureController.otpVerification);
 // profile view route
 router.get("/users/profile/:brandName", userProfileViewController.profileView);
+router.post("/users/edit", userEditProfileController.editProfile);
 // add video to render queue
 router.post(
   "/promotionalvideo/queue",
