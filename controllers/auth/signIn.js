@@ -25,7 +25,7 @@ exports.signInUser = async (req, res) => {
         { token: user.token },
         { new: true },
         (err, user) => {
-          console.log(user);
+          // console.log(user);
 
           if (err)
             res.status(500).send({

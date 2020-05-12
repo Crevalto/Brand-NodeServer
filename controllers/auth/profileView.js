@@ -8,25 +8,33 @@ exports.profileView = async (req, res) => {
 
   try {
     // console.log(req.body);
-    const brandName = req.params.brandName; //gets the email and password of the user
+    const bName = req.params.brandName; //gets the email and password of the user
 
-    const user = await User.findByBrandName({ bandName: brandName }); //extracts the user using mail and password
-    if (!user) {
-      return res
-        .status(401)
-        .send({ error: "Login failed! Check authentication credentials" }); //If user not present
-    }
+    const user = await User.findByBrandName({ brandName: bName });
 
-    const bname = await user.bandName;
-    const bid = await user.identificationDetail; //if success gets brand name,Id,logo and phone number of the profile logged in
-    const br_logo = await user.brandAssets;
+    //extracts the user using mail and password
+    // const check = await user.findOne(brandName);
+    // console.log(check);
+    // if (!check) {
+    //   return res.status(401).send({ error: "no such profile exists" }); //If user not present
+    // }
+
+    //if success gets brand name,Id,logo and phone number of the profile logged in
+    const bname = await user.brandName;
+    const baddress = await user.brandAddress;
+    const bid = await user.identificationDetail;
     const phn_no = await user.phoneNo;
+    const bemail = await user.emailAddress;
 
-    res.send({ satus: true, bname, bid, br_logo, phn_no }); /// sends tthe status and the collected details of user
+    /// sends tthe status and the collected details of user
+
+    res.send({ satus: true, bname, bid, baddress, bemail, phn_no });
   } catch (error) {
-    res.status(400).send({
-      status: false,
-      error: "You must be logged in to view your profile",
-    }); /// sends the status and the error in case of failed login/Userprofileview
+    /// sends the status and the error in case of failed login/Userprofileview
   }
+
+  res.status(400).send({
+    status: false,
+    error: "Sorry ,No such profile exists",
+  });
 };

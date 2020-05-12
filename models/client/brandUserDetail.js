@@ -105,4 +105,6 @@ userDetailSchema.statics.findByBrandName = async (bandName) => {
   return user;
 };
 
+
+
 module.exports = mongoose.model("branduserdetail", userDetailSchema);
