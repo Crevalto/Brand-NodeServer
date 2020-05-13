@@ -16,6 +16,8 @@ const userProfileViewController = require("../controllers/auth/profileView");
 const verifyUserController = require("../controllers/auth/userVerification");
 const verifyUserSecureController = require("../controllers/auth/userVerificationSecure");
 const userEditProfileController = require("../controllers/auth/editProfile");
+const addItemToCartController = require("../controllers/shop/addToCart");
+const getCartItems = require("../controllers/shop/getCartItems");
 
 // user authentication routes
 router.post("/users/register", userSignUpController.signUpUser);
@@ -39,6 +41,10 @@ router.get(
 router.get("/getcategories", vendorProductGetCategories.getCategories);
 // gets all the products for given category
 router.post("/getproducts", vendorProductGetProducts.getProducts);
+// added a list of items and their quantities to the user cart
+router.post("/addtocart", addItemToCartController.addItemToCart);
+// gets all the cart items of the user
+router.get("/getcartitems", getCartItems.getCartItems);
 
 // exporting router
 module.exports = router;
