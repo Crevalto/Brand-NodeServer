@@ -18,7 +18,7 @@ exports.profileView = async (req, res) => {
     const bid = user.identificationDetail;
     const phn_no = user.phoneNo;
     const bemail = user.emailAddress;
-    const brandColor = user.brandAssets;
+    const brandAssets = user.brandAssets;
     /// sends tthe status and the collected details of user
 
     res.send({
