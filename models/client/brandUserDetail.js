@@ -56,8 +56,8 @@ const userDetailSchema = new Schema({
     type: String,
   },
   cart: {
-    type: Schema.Types.Array, 
-  }
+    type: Schema.Types.Mixed,
+  },
 });
 
 userDetailSchema.pre("save", async function (next) {
@@ -107,7 +107,5 @@ userDetailSchema.statics.findByBrandName = async (bandName) => {
 
   return user;
 };
-
-
 
 module.exports = mongoose.model("branduserdetail", userDetailSchema);

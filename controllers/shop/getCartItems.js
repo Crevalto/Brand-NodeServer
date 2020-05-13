@@ -18,15 +18,21 @@ const getUsetId = async (token) => {
 
 // fetches the items from the cart
 module.exports.getCartItems = async (req, res, next) => {
-  // gets the token for user identification
-  const token = req.headers.authorization;
-  // getting the userId from the token
-  const userId = await getUsetId(token);
-  // fetching instance of user from db
-  const user = await User.findById(userId);
-  // fetching the cart items for the user
-  const cartItems = user.cart;
+  try {
+    // gets the token for user identification
+    const token = req.headers.authorization;
+    // getting the userId from the token
+    const userId = await getUsetId(token);
+    // fetching instance of user from db
+    const user = await User.findById(userId);
+    // fetching the cart items for the user
+    const cartItems = user.cart;
 
-  // sending response
-  res.send({ status: true, cartItems: cartItems });
+    // sending response
+    res.send({ status: true, cartItems: cartItems });
+  } catch (err) {
+    console.log("Error in main method Error:" + err);
+    // sending response
+    res.send({ status: false, error: "Error in main method Error" + err });
+  }
 };
