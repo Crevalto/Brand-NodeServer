@@ -41,34 +41,27 @@ module.exports.addItemToCart = async (req, res, next) => {
       } else return doc;
     });
 
-    // checking if equal number of items and quantities are sent
-    if (itemRefs.length == itemQuantities.length) {
-      // iterating through each item
-      for (i = 0; i < itemRefs.length; i++) {
-        // constructing object to add to database
-        let cartItemObj = {
-          itemId: itemRefs[i],
-          itemQuantity: itemQuantities[i],
-        };
+    // constructing object to add to database
+    let cartItemObj = {
+      itemId: itemRefs,
+      itemQuantity: itemQuantities,
+    };
 
-        // fetching the cart array from the user
-        let userExistingCart = await user.cart;
+    // fetching the cart array from the user
+    let userExistingCart = await user.cart;
 
-        // pushing the current object to the cart
-        userExistingCart[userExistingCart.length] = cartItemObj;
+    // checking if the cart is yet undefined
+    if (userExistingCart === undefined) {
+      // creating the cart array
+      userExistingCart = [];
+    } 
+    // pushing the current object to the cart
+    userExistingCart[userExistingCart.length] = cartItemObj;
+    // updating the database with the new item in the cart
+    await User.findByIdAndUpdate(userId, { cart: userExistingCart });
 
-        // updating the database with the new item in the cart
-        await User.findByIdAndUpdate(userId, { cart: userExistingCart });
-      }
-      // sending final response
-      res.send({ status: true, message: "Item added to cart!" });
-    } else {
-      console.log("Items and Quantities array length don't match");
-      res.send({
-        status: false,
-        error: "Please send quantities for each item and vice versa",
-      });
-    }
+    // sending final response
+    res.send({ status: true, message: "Item added to cart!" });
   } catch (err) {
     // logging error
     console.log("Error occured in main method");
