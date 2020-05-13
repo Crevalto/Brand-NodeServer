@@ -12,23 +12,24 @@ exports.profileView = async (req, res) => {
 
     const user = await User.findByBrandName({ brandName: bName });
 
-    //extracts the user using mail and password
-    // const check = await user.findOne(brandName);
-    // console.log(check);
-    // if (!check) {
-    //   return res.status(401).send({ error: "no such profile exists" }); //If user not present
-    // }
-
     //if success gets brand name,Id,logo and phone number of the profile logged in
-    const bname = await user.brandName;
-    const baddress = await user.brandAddress;
-    const bid = await user.identificationDetail;
-    const phn_no = await user.phoneNo;
-    const bemail = await user.emailAddress;
-
+    const bname = user.brandName;
+    const baddress = user.brandAddress;
+    const bid = user.identificationDetail;
+    const phn_no = user.phoneNo;
+    const bemail = user.emailAddress;
+    const brandColor = user.brandAssets;
     /// sends tthe status and the collected details of user
 
-    res.send({ satus: true, bname, bid, baddress, bemail, phn_no });
+    res.send({
+      satus: true,
+      bname,
+      bid,
+      baddress,
+      bemail,
+      phn_no,
+      brandAssets,
+    });
   } catch (error) {
     /// sends the status and the error in case of failed login/Userprofileview
   }

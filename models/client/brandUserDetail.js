@@ -44,7 +44,7 @@ const userDetailSchema = new Schema({
   },
   brandAssets: {
     brandLogoSrc: String,
-    brandColor: String,
+    brandColor: Schema.Types.Mixed,
     brandSoundTrack: String,
   },
   verifiedUser: {
