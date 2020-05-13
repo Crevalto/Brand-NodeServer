@@ -55,6 +55,9 @@ const userDetailSchema = new Schema({
   token: {
     type: String,
   },
+  cart: {
+    type: Schema.Types.Array, 
+  }
 });
 
 userDetailSchema.pre("save", async function (next) {
