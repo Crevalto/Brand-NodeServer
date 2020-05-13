@@ -28,40 +28,56 @@ module.exports.addItemToCart = async (req, res, next) => {
     // getting the userId from the token
     const userId = await getUsetId(token);
 
-    // get reference of user based on the userID
-    const user = await User.findById(userId, (err, doc) => {
-      if (err) {
-        console.log(
-          "An error occurred in finding the user based on decoded ID"
-        );
-        res.send({
-          status: false,
-          error: "An error occurred in finding the user based on decoded ID",
-        });
-      } else return doc;
-    });
+    if (itemRefs != null && itemQuantities != null) {
+      // get reference of user based on the userID
+      const user = await User.findById(userId, (err, doc) => {
+        if (err) {
+          console.log(
+            "An error occurred in finding the user based on decoded ID"
+          );
+          res.send({
+            status: false,
+            error: "An error occurred in finding the user based on decoded ID",
+          });
+        } else return doc;
+      });
 
-    // constructing object to add to database
-    let cartItemObj = {
-      itemId: itemRefs,
-      itemQuantity: itemQuantities,
-    };
+      // constructing object to add to database
+      let cartItemObj = {
+        itemId: itemRefs,
+        itemQuantity: itemQuantities,
+      };
 
-    // fetching the cart array from the user
-    let userExistingCart = await user.cart;
+      // fetching the cart array from the user
+      let userExistingCart = await user.cart;
 
-    // checking if the cart is yet undefined
-    if (userExistingCart === undefined) {
-      // creating the cart array
-      userExistingCart = [];
-    } 
-    // pushing the current object to the cart
-    userExistingCart[userExistingCart.length] = cartItemObj;
-    // updating the database with the new item in the cart
-    await User.findByIdAndUpdate(userId, { cart: userExistingCart });
+      // checking if the cart is yet undefined
+      if (userExistingCart === undefined) {
+        // creating the cart array
+        userExistingCart = [];
+      }
+      // pushing the current object to the cart
+      userExistingCart[userExistingCart.length] = cartItemObj;
+      // updating the database with the new item in the cart
+      await User.findByIdAndUpdate(
+        userId,
+        { cart: userExistingCart },
+        (err) => {
+          if (err) {
+            console.log("Error in updating the cart in database");
+            res.send({
+              status: false,
+              error: "Error in updating the cart in database Error: " + err,
+            });
+          }
+        }
+      );
 
-    // sending final response
-    res.send({ status: true, message: "Item added to cart!" });
+      // sending final response
+      res.send({ status: true, message: "Item added to cart!" });
+    } else {
+      res.send({ status: false, error: "Please send required parameters" });
+    }
   } catch (err) {
     // logging error
     console.log("Error occured in main method");
