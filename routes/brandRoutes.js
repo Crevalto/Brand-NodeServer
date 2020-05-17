@@ -1,6 +1,20 @@
 const express = require("express");
-// const User = require("../models/User");
-const auth = require("../middleware/auth");
+const multer = require('multer')
+
+// declaring middlewares
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+// upload function to fetch and store the files sent locally
+const upload = multer({
+  storage: storage
+});
+
 
 // creating a router instance to manage routes
 const router = express.Router();
@@ -18,6 +32,8 @@ const verifyUserSecureController = require("../controllers/auth/userVerification
 const userEditProfileController = require("../controllers/auth/editProfile");
 const addItemToCartController = require("../controllers/shop/addToCart");
 const getCartItems = require("../controllers/shop/getCartItems");
+const brandAssetsUploadContoller = require("../controllers/brandAssets/fileUpload");
+const brandAssetsGetFilesController = require("../controllers/brandAssets/getFiles");
 
 // user authentication routes
 router.post("/users/register", userSignUpController.signUpUser);
@@ -45,6 +61,9 @@ router.post("/getproducts", vendorProductGetProducts.getProducts);
 router.post("/addtocart", addItemToCartController.addItemToCart);
 // gets all the cart items of the user
 router.get("/getcartitems", getCartItems.getCartItems);
-
+// used to upload brand assets
+router.post("/brandassets/upload", upload.array('file'), brandAssetsUploadContoller.uploadFile);
+// used to get the files uploaded
+router.get("/brandassets/getfiles", brandAssetsGetFilesController.getFiles);
 // exporting router
 module.exports = router;
