@@ -33,7 +33,7 @@
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.10",
     "multer": "^1.4.2",
-    "nodemailer": "^6.4.6",
+    "nodemailer": "^6.4.16",
     "shotstack-sdk": "0.0.17",
     "validator": "^13.0.0"
   }
